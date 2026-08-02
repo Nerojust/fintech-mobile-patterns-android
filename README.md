@@ -122,6 +122,13 @@ This is a sample app, so a few things were deliberately kept basic rather than f
 - There's a secure, encrypted place to store login tokens (`EncryptedTokenStore`) ready to go, but since this demo has no login screen, it's not hooked up to anything yet.
 - No fraud detection, remote kill-switch, or crash reporting — those are real production concerns, but out of scope for a sample focused on architecture patterns.
 
+## Let's connect
+
+- [LinkedIn](https://www.linkedin.com/in/nerojust/)
+- [Medium](https://medium.com/@nerojust4)
+- [Dev.to](https://dev.to/nerojust/building-payment-flows-in-android-lessons-from-real-fintech-apps-5a09) — building payment flows in Android, lessons from real fintech apps
+- [GitHub](https://github.com/Nerojust) — follows appreciated
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
