@@ -70,7 +70,8 @@ sequenceDiagram
     Repo-->>VM: Transaction(post-attempt status) — not the optimistic pre-attempt row
     VM-->>UI: Success (Pending/Synced) or Failed (FailedPermanent)
     Note over Worker: Background sweep also triggered on reconnect (ConnectivityObserver)
-    Note over Worker: After 5 transient failures a row becomes FAILED_PERMANENT/NETWORK_UNAVAILABLE;<br/>the next sync revives it to PENDING and retries (insufficient-funds rows are never revived)
+    Note over Worker: After 5 transient failures a row becomes FAILED_PERMANENT/NETWORK_UNAVAILABLE
+    Note over Worker: The next sync revives it to PENDING and retries (insufficient-funds rows are never revived)
 ```
 
 ## Why this structure differs from clean-architecture-android
