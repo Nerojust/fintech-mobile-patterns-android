@@ -1,0 +1,48 @@
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+config:
+  validation: true
+  warningsAsErrors: false
+  checkExhaustiveness: false
+  excludes: ''
+
+processors:
+  active: true
+  exclude:
+    - 'DetektProgressListener'
+
+console-reports:
+  active: true
+  exclude:
+    - 'ProjectStatisticsReport'
+    - 'ComplexityReport'
+    - 'NotificationReport'
+    - 'FindingsReport'
+
+naming:
+  # Compose convention names @Composable functions in PascalCase (e.g. CardsScreen,
+  # SendMoneyContent) so they read like the UI element they emit — the same reason
+  # classes are PascalCase. Detekt's default FunctionNaming pattern predates Compose
+  # and only allows camelCase, so every Screen/Content composable in this repo would
+  # otherwise need a per-function @Suppress. Widening the pattern to accept a leading
+  # uppercase letter is the standard fix recommended for Compose codebases.
+  FunctionNaming:
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+
+style:
+  # 10.0 / 100 are the minor-unit (cents) conversion base, used the same way in both
+  # Money.kt (Math.pow(10.0, ...)) and SendMoneyViewModel.kt (`* 100` major->minor
+  # conversion) — a self-explanatory, repo-wide constant, not something a named val
+  # per call site would clarify. Everything else MagicNumber flags (e.g. the FX-rate
+  # table in FakeVelaApiService.kt) stays subject to the rule and is suppressed at
+  # the declaration instead, since those literals are file-specific, not repo-wide.
+  MagicNumber:
+    ignoreNumbers:
+      - '-1'
+      - '0'
+      - '1'
+      - '2'
+      - '10.0'
+      - '100'

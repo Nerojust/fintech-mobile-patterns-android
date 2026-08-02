@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Network security config demonstrating the certificate-pinning pattern.
+
+  This is a fictional demo app with no real backend (FakeVelaApiService is in-process only),
+  so there is no real host to pin against. The pin-set below is illustrative only — a
+  placeholder domain with placeholder (non-functional) SPKI pin digests — showing where and
+  how a real deployment would configure pinning against its actual API host. It is commented
+  out so it has zero effect on the base config, which otherwise just uses the platform default
+  trust anchors (system + user-added CAs) for all cleartext-disabled traffic.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!--
+    <domain-config>
+        <domain includeSubdomains="true">api.example.com</domain>
+        <pin-set expiration="2030-01-01">
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin>
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin>
+        </pin-set>
+    </domain-config>
+    -->
+</network-security-config>
