@@ -140,6 +140,18 @@ This is a sample app, so a few things were deliberately kept basic rather than f
 - There's a secure, encrypted place to store login tokens (`EncryptedTokenStore`) ready to go, but since this demo has no login screen, it's not hooked up to anything yet.
 - No fraud detection, remote kill-switch, or crash reporting — those are real production concerns, but out of scope for a sample focused on architecture patterns.
 
+## Coming soon
+
+A few skills/patterns planned for future additions:
+
+- **Add/remove card UI** — `CardsViewModel` and the underlying use cases already support this and are tested; it just needs a button.
+- **A real login flow**, so `EncryptedTokenStore` has something to actually protect.
+- **A real backend adapter** — a second `VelaApiService` implementation behind Retrofit, as a worked example of swapping out `FakeVelaApiService`.
+- **Screenshot testing** (Paparazzi or Roborazzi) to round out the testing pyramid.
+- **Basic tamper/root-detection** as a worked example of a MASVS-RESILIENCE control, alongside the MASVS-STORAGE/CRYPTO/AUTH ones already here.
+
+Got a pattern you'd like to see added? Open an issue — see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Let's connect
 
 - [LinkedIn](https://www.linkedin.com/in/nerojust/)
