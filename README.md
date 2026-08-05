@@ -95,6 +95,24 @@ If you've looked at [clean-architecture-android](https://github.com/nerojust/cle
 - The `data` module *does* use Android-specific tools here (Room for the local database, WorkManager for background retries) — that's new compared to the companion repo, because offline support needs them.
 - All the dependency-injection wiring (Hilt) lives only in the `app` module, keeping every other module simple and framework-free.
 
+## How this lines up with real security standards
+
+This is a sample app, not a certified system — but the security patterns it demonstrates aren't made up. They map to two standards real fintech and payments teams actually get measured against: [OWASP MASVS](https://mas.owasp.org/MASVS/) (the standard checklist for mobile app security) and [PCI DSS](https://www.pcisecuritystandards.org/) (the standard for handling card data).
+
+**OWASP MASVS controls this app demonstrates:**
+
+| Control | What covers it here |
+|---|---|
+| MASVS-STORAGE-1 (sensitive data stored securely) | `EncryptedTokenStore` — Keystore-backed via `EncryptedSharedPreferences` |
+| MASVS-STORAGE-2 (no sensitive data leaks via logs) | `RedactingTree` strips card numbers, amounts, and tokens before anything reaches logcat |
+| MASVS-CRYPTO-1 (strong, current cryptography) | AES-256 (GCM/SIV) via Android Keystore, not a hand-rolled cipher |
+| MASVS-AUTH-2 (sensitive actions require re-authentication) | Biometric confirmation gates every payment submission |
+| MASVS-NETWORK-2 (TLS pinning for high-risk connections) | Network security config with a certificate-pinning stub, ready for a real backend |
+
+**What this app does *not* attempt** (worth knowing, since MASVS also covers this): MASVS-RESILIENCE controls like root detection, anti-tampering, and anti-debugging are intentionally left out — see "Things that are intentionally left simple" below.
+
+**PCI DSS alignment:** the app never stores, logs, or transmits a full card number — `Card` only ever holds `last4` + brand + expiry (PCI DSS Requirement 3, protecting stored cardholder data). Logs are redacted before anything sensitive could reach them (Requirement 10's ban on logging sensitive authentication data). It's not a PCI DSS *certified* system — there's no real payment processor, no QSA audit — but the data-handling discipline is the same.
+
 ## Getting it running
 
 1. Clone the repo and open it in Android Studio (Ladybug or newer).
