@@ -1,0 +1,59 @@
+name: Traffic History
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Record traffic snapshot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p .github/data
+          FILE=.github/data/traffic-history.json
+          [ -f "$FILE" ] || echo "[]" > "$FILE"
+
+          clones=$(gh api "repos/$REPO/traffic/clones")
+          views=$(gh api "repos/$REPO/traffic/views")
+
+          today=$(date -u +%Y-%m-%d)
+          clones_count=$(echo "$clones" | jq '.count')
+          clones_uniques=$(echo "$clones" | jq '.uniques')
+          views_count=$(echo "$views" | jq '.count')
+          views_uniques=$(echo "$views" | jq '.uniques')
+
+          entry=$(jq -n \
+            --arg date "$today" \
+            --argjson clones "$clones_count" \
+            --argjson clones_uniques "$clones_uniques" \
+            --argjson views "$views_count" \
+            --argjson views_uniques "$views_uniques" \
+            '{date: $date, clones: $clones, clones_uniques: $clones_uniques, views: $views, views_uniques: $views_uniques}')
+
+          jq --argjson entry "$entry" \
+            '(map(select(.date == $entry.date)) | length) as $exists |
+             if $exists > 0 then map(if .date == $entry.date then $entry else . end)
+             else . + [$entry] end' \
+            "$FILE" > "$FILE.tmp"
+          mv "$FILE.tmp" "$FILE"
+
+      - name: Commit if changed
+        run: |
+          if ! git diff --quiet -- .github/data/traffic-history.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add .github/data/traffic-history.json
+            git commit -m "Record daily traffic snapshot"
+            git push
+          fi
