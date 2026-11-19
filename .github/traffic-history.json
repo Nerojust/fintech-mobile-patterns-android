@@ -911,5 +911,27 @@
       "count": 2,
       "uniques": 2
     }
+  },
+  {
+    "date": "2026-11-17",
+    "views": {
+      "count": 0,
+      "uniques": 0
+    },
+    "clones": {
+      "count": 17,
+      "uniques": 11
+    }
+  },
+  {
+    "date": "2026-11-18",
+    "views": {
+      "count": 0,
+      "uniques": 0
+    },
+    "clones": {
+      "count": 4,
+      "uniques": 4
+    }
   }
 ]
